@@ -1,0 +1,19 @@
+{
+  "name": "İlaç Hatırlatıcı",
+  "short_name": "İlaçlar",
+  "description": "İlaç alma saatlerini takip etmek için basit hatırlatıcı.",
+  "lang": "tr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f6f7f4",
+  "theme_color": "#24745d",
+  "icons": [
+    {
+      "src": "icon512_mascaple",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

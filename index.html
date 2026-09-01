@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#24745d" />
+    <title>İlaç Hatırlatıcı</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" href="icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <section id="loginScreen" class="login-screen" aria-labelledby="loginHeading">
+      <form id="loginForm" class="login-panel" autocomplete="off">
+        <p class="eyebrow">İlaç Hatırlatıcı</p>
+        <h1 id="loginHeading">Kim kullanıyor?</h1>
+        <p class="login-text">Lütfen uygulamayı hangi rol ile açacağını seç.</p>
+
+        <div class="role-grid" role="radiogroup" aria-label="Rol seçimi">
+          <label class="role-card">
+            <input type="radio" name="role" value="patient" required />
+            <span>
+              <strong>İlacı kullanan kişiyim</strong>
+              <small>İlaçları ekler, aldığını onaylar ve hatırlatma alır.</small>
+            </span>
+          </label>
+
+          <label class="role-card">
+            <input type="radio" name="role" value="family" required />
+            <span>
+              <strong>Aile üyesiyim</strong>
+              <small>Sadece ilaç durumunu ve geçmişini görür, bildirim alır.</small>
+            </span>
+          </label>
+        </div>
+
+        <label for="loginName">İsim</label>
+        <input id="loginName" name="loginName" type="text" required placeholder="İsim yaz" />
+
+        <button type="submit">Devam et</button>
+      </form>
+    </section>
+
+    <nav class="app-menu" aria-label="Uygulama menüsü" hidden>
+      <button id="menuButton" class="menu-button" type="button" aria-expanded="false" aria-controls="menuPanel" title="Menü">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div id="menuPanel" class="menu-panel" hidden>
+        <button id="showDeletePanelButton" class="menu-item patient-only" type="button">İlaç sil</button>
+        <button id="showHistoryButton" class="menu-item" type="button">İlaç geçmişi</button>
+        <button id="enableNotificationsButton" class="menu-item" type="button">Bildirimleri aç</button>
+        <button id="changeRoleButton" class="menu-item" type="button">Rol değiştir</button>
+      </div>
+    </nav>
+
+    <main id="appShell" class="app-shell" hidden>
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">İlaç Hatırlatıcı</p>
+          <h1>Merhaba, <span id="personNameDisplay">Misafir</span></h1>
+          <p id="roleDescription" class="role-description"></p>
+          <p class="date-line">
+            <span id="todayText"></span>
+            <span id="currentTimeText" class="time-line"></span>
+          </p>
+        </div>
+        <form id="profileForm" class="profile-form patient-only" autocomplete="off">
+          <label for="personName">Kişinin adı</label>
+          <div class="inline-control">
+            <input id="personName" name="personName" type="text" placeholder="İsim yaz" />
+            <button type="submit">Kaydet</button>
+          </div>
+        </form>
+      </header>
+
+      <section class="summary-grid" aria-label="Günlük özet">
+        <div class="summary-item">
+          <span>Bugün alınacak</span>
+          <strong id="plannedCount">0</strong>
+        </div>
+        <div class="summary-item">
+          <span>Alındı</span>
+          <strong id="takenCount">0</strong>
+        </div>
+        <div class="summary-item">
+          <span>Bekliyor</span>
+          <strong id="openCount">0</strong>
+        </div>
+      </section>
+
+      <section id="patientView" class="content-grid patient-only">
+        <section class="panel" aria-labelledby="medicationHeading">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Bugün</p>
+              <h2 id="medicationHeading">İlaçlar</h2>
+            </div>
+          </div>
+          <div id="medicationList" class="medication-list"></div>
+        </section>
+
+        <aside class="panel" aria-labelledby="addMedicationHeading">
+          <p class="eyebrow">Yeni ilaç</p>
+          <h2 id="addMedicationHeading">Ekle</h2>
+          <form id="medicationForm" class="stack-form" autocomplete="off">
+            <label for="medName">İlaç adı</label>
+            <input id="medName" name="medName" type="text" required placeholder="Örn. tansiyon ilacı" />
+
+            <label for="medTime">Alma saati</label>
+            <input id="medTime" name="medTime" type="time" required />
+
+            <label for="medNotes">Ek bilgiler</label>
+            <textarea id="medNotes" name="medNotes" rows="4" placeholder="Örn. yemekten sonra, doz, not"></textarea>
+
+            <button type="submit">İlaç ekle</button>
+          </form>
+        </aside>
+      </section>
+
+      <section id="familyView" class="panel family-view" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Aile görünümü</p>
+            <h2>Bugünkü durum</h2>
+          </div>
+        </div>
+        <div id="familyStatusList" class="medication-list"></div>
+      </section>
+
+      <section id="deletePanel" class="panel utility-panel" aria-labelledby="deleteHeading" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Seçim</p>
+            <h2 id="deleteHeading">İlaç sil</h2>
+          </div>
+          <button id="closeDeletePanelButton" class="ghost-button" type="button">Kapat</button>
+        </div>
+        <form id="deleteMedicationForm" class="delete-list"></form>
+      </section>
+
+      <section id="historyPanel" class="panel utility-panel" aria-labelledby="historyHeading" hidden>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Kayıt</p>
+            <h2 id="historyHeading">İlaç geçmişi</h2>
+          </div>
+          <div class="panel-actions">
+            <button id="exportButton" class="ghost-button" type="button">Geçmişi indir</button>
+            <button id="closeHistoryButton" class="ghost-button" type="button">Kapat</button>
+          </div>
+        </div>
+        <div class="history-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Tarih</th>
+                <th>İlaç</th>
+                <th>Planlanan saat</th>
+                <th>Onaylanan saat</th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>

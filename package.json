@@ -1,0 +1,14 @@
+{
+  "name": "ilac-hatirlatici-pwa",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PWA ilaç hatırlatıcı with shared family view and web push notifications.",
+  "scripts": {
+    "start": "node server.js",
+    "generate-vapid": "web-push generate-vapid-keys"
+  },
+  "dependencies": {
+    "express": "^4.18.3",
+    "web-push": "^3.6.7"
+  }
+}
